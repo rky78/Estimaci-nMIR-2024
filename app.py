@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+import plotly.express as px  # Replaced matplotlib with Plotly
 from scipy.interpolate import interp1d
 
 # --- TITLE AND INSTRUCTIONS ---
@@ -66,11 +66,12 @@ st.write(table_df)
 # --- PLOT DISTRIBUTION ---
 st.subheader('📈 Gráfica de la Distribución')
 pqr_values = np.linspace(20, 80, 100)  # Simulated PQR for demonstration
-plt.figure(figsize=(10, 6))
-plt.hist(pqr_values, bins=30, color='lightblue', edgecolor='black', alpha=0.7)
-plt.axvline(x=pqr_values[int(percentil_input) - 1], color='red', linestyle='--', label='Percentil Objetivo')
-plt.xlabel('PQR')
-plt.ylabel('Frecuencia')
-plt.title('Distribución de la PQR')
-plt.legend()
-st.pyplot(plt)
+df_pqr = pd.DataFrame({'PQR': pqr_values})
+
+# Create the histogram using Plotly
+fig = px.histogram(df_pqr, x='PQR', nbins=30, title='Distribución de la PQR', 
+                   labels={'PQR': 'PQR'}, opacity=0.7, color_discrete_sequence=['lightblue'])
+fig.add_vline(x=pqr_values[int(percentil_input) - 1], line_dash='dash', line_color='red', annotation_text='Percentil Objetivo')
+
+# Display the plot
+st.plotly_chart(fig)
