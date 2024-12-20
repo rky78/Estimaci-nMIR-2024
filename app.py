@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px  # Replaced matplotlib with Plotly
+import seaborn as sns  # Replaced Plotly with Seaborn for visualization
 from scipy.interpolate import interp1d
+import matplotlib.pyplot as plt  # Required for Seaborn plots
 
 # --- TITLE AND INSTRUCTIONS ---
 st.title('🧮 APROXIMACIÓN SEGÚN MIR2024')
@@ -68,10 +69,12 @@ st.subheader('📈 Gráfica de la Distribución')
 pqr_values = np.linspace(20, 80, 100)  # Simulated PQR for demonstration
 df_pqr = pd.DataFrame({'PQR': pqr_values})
 
-# Create the histogram using Plotly
-fig = px.histogram(df_pqr, x='PQR', nbins=30, title='Distribución de la PQR', 
-                   labels={'PQR': 'PQR'}, opacity=0.7, color_discrete_sequence=['lightblue'])
-fig.add_vline(x=pqr_values[int(percentil_input) - 1], line_dash='dash', line_color='red', annotation_text='Percentil Objetivo')
-
-# Display the plot
-st.plotly_chart(fig)
+# Create the histogram using Seaborn
+plt.figure(figsize=(10, 6))
+sns.histplot(df_pqr['PQR'], bins=30, kde=True, color='lightblue')
+plt.axvline(x=pqr_values[int(percentil_input) - 1], color='red', linestyle='--', label='Percentil Objetivo')
+plt.xlabel('PQR')
+plt.ylabel('Frecuencia')
+plt.title('Distribución de la PQR')
+plt.legend()
+st.pyplot(plt)
